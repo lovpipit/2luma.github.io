@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 NEW YEAR VISION</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;700&family=Montserrat:wght@200;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #2b0505; /* 深红黑背景 */
+            --bg-red: #5e0a0a;  /* 中层红 */
+            --accent-red: #ff3333; /* 亮红高光 */
+            --gold: #d4af37;    /* 香槟金 */
+            --text-light: #f0f0f0;
+            --glass: rgba(50, 10, 10, 0.4);
+            --font-jp: 'Noto Serif JP', serif; /* 衬线体更有仪式感 */
+            --font-en: 'Montserrat', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-deep) 0%, #000000 100%);
+            color: var(--text-light);
+            font-family: var(--font-jp);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* --- 背景粒子容器 --- */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* --- 布局 --- */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* --- Header / Hero --- */
+        header {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .year {
+            font-family: var(--font-en);
+            font-size: clamp(4rem, 15vw, 12rem);
+            font-weight: 600;
+            line-height: 0.9;
+            background: linear-gradient(to bottom, #fff, var(--bg-red));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0;
+            animation: textReveal 1.5s cubic-bezier(0.2, 1, 0.3, 1) forwards;
+            letter-spacing: -5px;
+        }
+
+        .title-sub {
+            color: var(--gold);
+            font-size: 1.2rem;
+            letter-spacing: 0.5em;
+            margin-top: 20px;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards 1s;
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 50px;
+            font-size: 0.8rem;
+            color: var(--accent-red);
+            animation: pulse 2s infinite;
+        }
+
+        /* --- 展望内容区域 --- */
+        section {
+            padding: 100px 0;
+        }
+
+        .vision-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .card {
+            background: var(--glass);
+            border: 1px solid rgba(255, 51, 51, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 4px;
+            transition: transform 0.4s ease, border-color 0.4s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-red);
+            box-shadow: 0 10px 40px rgba(220, 20, 60, 0.1);
+        }
+
+        .card-number {
+            font-family: var(--font-en);
+            font-size: 3rem;
+            color: rgba(255, 255, 255, 0.1);
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--gold);
+        }
+
+        .card p {
+            line-height: 2;
+            font-size: 0.95rem;
+            color: #ccc;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #fff, var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            padding: 80px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            color: var(--gold);
+        }
+
+        /* --- Animations --- */
+        @keyframes textReveal {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .vision-grid { grid-template-columns: 1fr; }
+            .year { font-size: 5rem; letter-spacing: -2px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="canvas-container">
+        <canvas id="bgCanvas"></canvas>
+    </div>
+
+    <div class="container">
+        
+        <header>
+            <div class="title-sub">The Future Awaits</div>
+            <h1 class="year">2026</h1>
+            <p style="margin-top: 30px; letter-spacing: 0.2em; font-size: 1.1rem; color: #ddd;">
+                革新と調和の年へ
+            </p>
+            <div class="scroll-hint">SCROLL TO EXPLORE</div>
+        </header>
+
+        <section>
+            <div class="section-header">
+                <h2>2026年の展望</h2>
+                <p>Technology meets Tradition. Digital meets Physical.</p>
+            </div>
+
+            <div class="vision-grid">
+                <article class="card">
+                    <span class="card-number">01</span>
+                    <h3>技術的特異点への接近</h3>
+                    <p>
+                        AIと人間の共創は、新たなフェーズへ突入する。
+                        アルゴリズムはもはや単なるツールではなく、
+                        インスピレーションを増幅させる「共鳴板」となる。
+                        2026年、私たちはデジタルの限界を再定義する。
+                    </p>
+                </article>
+
+                <article class="card">
+                    <span class="card-number">02</span>
+                    <h3>没入型体験の進化</h3>
+                    <p>
+                        聴覚と視覚の境界線はより曖昧に。
+                        リアルタイム生成される音響空間と、
+                        フィジカルな感覚が融合した「Immersive Art」が
+                        日常のスタンダードへと進化を遂げる。
+                    </p>
+                </article>
+
+                <article class="card">
+                    <span class="card-number">03</span>
+                    <h3>本質への回帰</h3>
+                    <p>
+                        高度なテクノロジーが浸透するからこそ、
+                        「人間らしさ」や「有機的なノイズ」の価値が再評価される。
+                        デジタルの中に温もりを見出し、
+                        静寂の中に意味を見出す年となるだろう。
+                    </p>
+                </article>
+            </div>
+        </section>
+
+        <footer>
+            <p>DESIGNED FOR THE FUTURE</p>
+            <p style="margin-top: 10px; font-family: var(--font-en); font-size: 0.8rem; opacity: 0.6;">
+                © 2026 Shen Linlong. All Rights Reserved.
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        let particles = [];
+
+        // 调整画布大小
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // 粒子类
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5; // 缓慢横向移动
+                this.vy = (Math.random() - 0.5) * 0.5 + 0.2; // 缓慢下落
+                this.size = Math.random() * 2;
+                this.color = Math.random() > 0.8 ? '#d4af37' : '#ff3333'; // 金色或红色
+                this.alpha = Math.random() * 0.5 + 0.1;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                // 边界检查，循环播放
+                if (this.y > height) this.y = 0;
+                if (this.x > width) this.x = 0;
+                if (this.x < 0) this.x = width;
+            }
+
+            draw() {
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // 初始化粒子
+        for (let i = 0; i < 100; i++) {
+            particles.push(new Particle());
+        }
+
+        // 动画循环
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            // 绘制粒子
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
+
